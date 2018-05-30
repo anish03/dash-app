@@ -31,9 +31,16 @@ app.layout = html.Div([
     html.Div([
         html.Div([
             dcc.Dropdown(
-                id='attrib',
+                id='attrib1',
                 options=[{'label':i,'value':i} for i in available_selectors]
             ),
+        ],
+        style={'width':'48%','display':'inline-block'}),
+        html.Div([
+            dcc.Dropdown(
+                id='attrib2',
+                options=[{'label':i,'value':i} for i in available_selectors]
+            )
         ],
         style={'width':'48%','display':'inline-block'})
     ]),
@@ -47,15 +54,16 @@ app.layout = html.Div([
 
 @app.callback(
     Output('main-graph','figure'),
-    [Input('attrib','value')]
+    [Input('attrib1','value'),
+     Input('attrib2','value')]
 )
-def update_graph(attrib_value):
+def update_graph(attrib1,attrib2):
     # filtered = df[attrib_value]
     # print filtered
     return {
         'data':[go.Scatter(
-            x = df[attrib_value],
-            y = 10,
+            x = df[attrib1],
+            y = df[attrib2],
             mode = 'markers',
             marker = {
                 'size' : 15,
@@ -65,10 +73,10 @@ def update_graph(attrib_value):
         )],
         'layout':go.Layout(
             xaxis = {
-                'title' : attrib_value
+                'title' : attrib1
             },
             yaxis = {
-                'title' : 'y-axis'
+                'title' : attrib2
             },
             margin = {
                 'l' : 40, 'b' : 40, 't' : 10, 'r' : 0
