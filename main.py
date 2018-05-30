@@ -4,7 +4,7 @@ import dash_html_components as html
 import numpy as np
 
 app = dash.Dash()
-
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 app.layout = html.Div(children=[
     html.H1(children='Sensor Data'),
 
