@@ -10,7 +10,7 @@ app = dash.Dash()
 # include CSS
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
-df = pd.read_csv('perf_met.csv')
+df = pd.read_csv('perf_met1.csv')
 
 available_selectors = df.columns.unique()
 
@@ -27,22 +27,24 @@ def generate_table(dataframe):
         style={'margin-left':'30%'}
     )
 
+
 app.layout = html.Div([
     html.Div([
         html.Div([
             dcc.Dropdown(
                 id='attrib1',
-                options=[{'label':i,'value':i} for i in available_selectors]
+                options=[{'label':i,'value':i} for i in available_selectors if i!='Date' and i!='Unnamed: 0']
             ),
         ],
         style={'width':'48%','display':'inline-block'}),
-        html.Div([
-            dcc.Dropdown(
-                id='attrib2',
-                options=[{'label':i,'value':i} for i in available_selectors]
-            )
-        ],
-        style={'width':'48%','display':'inline-block'})
+        html.Div(id='output-div')
+        # html.Div([
+        #     dcc.Dropdown(
+        #         id='attrib2',
+        #         options=[{'label':i,'value':i} for i in available_selectors]
+        #     )
+        # ],
+        # style={'width':'48%','display':'inline-block'})
     ]),
 
     dcc.Graph(id='main-graph'),
@@ -54,16 +56,14 @@ app.layout = html.Div([
 
 @app.callback(
     Output('main-graph','figure'),
-    [Input('attrib1','value'),
-     Input('attrib2','value')]
+    [Input('attrib1','value')]
 )
-def update_graph(attrib1,attrib2):
-    # filtered = df[attrib_value]
-    # print filtered
+def update_graph(attrib):
+
     return {
         'data':[go.Scatter(
-            x = df[attrib1],
-            y = df[attrib2],
+            x = df['Date'],
+            y = df[attrib],
             mode = 'markers',
             marker = {
                 'size' : 15,
@@ -73,10 +73,10 @@ def update_graph(attrib1,attrib2):
         )],
         'layout':go.Layout(
             xaxis = {
-                'title' : attrib1
+                'title' : 'Date'
             },
             yaxis = {
-                'title' : attrib2
+                'title' : attrib
             },
             margin = {
                 'l' : 40, 'b' : 40, 't' : 10, 'r' : 0
@@ -84,6 +84,14 @@ def update_graph(attrib1,attrib2):
             hovermode = 'closest'
         )
     }
+
+@app.callback(
+    Output('output-div','children'),
+    [Input('main-graph','hoverData')]
+)
+def update_table(date):
+    return '{}'.format(date['points'][0]['x'])
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
