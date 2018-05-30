@@ -10,6 +10,7 @@ heading = {
 }
 
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
+
 app.layout = html.Div(children=[
     html.H1(style={'padding':heading['padding']},children='Sensor Data'),
 
