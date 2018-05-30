@@ -4,11 +4,16 @@ import dash_html_components as html
 import numpy as np
 
 app = dash.Dash()
+
+heading = {
+    'padding' : '10px'
+}
+
 app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 app.layout = html.Div(children=[
-    html.H1(children='Sensor Data'),
+    html.H1(style={'padding':heading['padding']},children='Sensor Data'),
 
-    html.Div(children='''
+    html.Div(style={'padding':heading['padding']},children='''
         A web Dash App.
     '''),
 
